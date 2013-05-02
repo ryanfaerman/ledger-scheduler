@@ -4,15 +4,14 @@ module LedgerScheduler
 
     def initialize(ledger)
       @entries = []
-      @ledger = ledger
+      parse(ledger)
     end
 
-    def parse!
-      return @entries unless @ledger.length > 0
+    def parse(ledger)
       @entries = []
       date = desc = nil
       accounts = []
-      @ledger.strip.split("\n").each do |entry|
+      ledger.strip.split("\n").each do |entry|
         next if entry =~ /^\s*$/ || entry =~ /^[^ \t\d]/
         if entry =~ /^([\d\/]+)(\=[\d\/]+)?(\s+[\*!]?\s*.*?)$/
           @entries << { :date => date.strip, :desc => desc.strip, :accounts => balance(accounts) } if date
