@@ -15,25 +15,47 @@ module LedgerScheduler
         its(:length) {should == 5}
 
         describe 'first entry' do
-          subject {entries.first}
+          subject(:first_entry) {entries.first}
 
-          specify {subject[:desc].should == "* Checking balance"}
-          specify {subject[:date].should == "2004/05/01"}
-          specify {subject[:accounts].first[:name].should == "Assets:Bank:Checking"}
-          specify {subject[:accounts].first[:amount].should == 1000}
-          specify {subject[:accounts].last[:name].should == "Equity:Opening Balances"}
-          specify {subject[:accounts].last[:amount].should == -1000}
+          its([:desc]) { should == "* Checking balance" }
+          its([:date]) { should == "2004/05/01" }
+
+          describe 'first account' do
+            subject {first_entry[:accounts].first}
+
+            its([:name])    {should == "Assets:Bank:Checking"}
+            its([:amount])  {should == 1000}
+          end
+
+          describe 'last account' do
+            subject {first_entry[:accounts].last}
+
+            its([:name])    { should == "Equity:Opening Balances" }
+            its([:amount])  { should == -1000 }
+          end
         end
 
         describe 'last entry' do
-          subject {entries.last}
+          subject(:last_entry) { entries.last }
 
-          specify {subject[:desc].should == "(100) Credit card company"}
-          specify {subject[:date].should == "2004/05/27"}
-          specify {subject[:accounts].first[:name].should == "Liabilities:MasterCard"}
-          specify {subject[:accounts].first[:amount].should == 20.24}
-          specify {subject[:accounts].last[:name].should == "Assets:Bank:Checking"}
-          specify {subject[:accounts].last[:amount].should == -20.24}
+          its([:desc]) { should == "(100) Credit card company" }
+          its([:desc]) { should == "(100) Credit card company" }
+          its([:date]) { should == "2004/05/27" }
+
+          describe 'first account' do
+            subject { last_entry[:accounts].first }
+
+            its([:name])    {should == "Liabilities:MasterCard"}
+            its([:amount])  {should == 20.24}
+          end
+
+          describe 'last account' do
+            subject { last_entry[:accounts].last }
+
+            its([:name])    {should == "Assets:Bank:Checking"}
+            its([:amount])  {should == -20.24}
+          end
+          
         end
       end
       
